@@ -1,28 +1,40 @@
 import os
 
 def main():
-    i = 1
-
-    path      = input("Full folder path: ")
+    path      = input("Folder path (with '/' separating folders): ")
     prefix    = input("Prefix: ")
+    index     = int(input("Index: "))
     sufix     = input("Sufix: ")
-    extension = input("File extension: ")
+    extension = input("File extension (without '.'): ")
 
+    index -= 1
     for filename in os.listdir(path):
-        index = str(i)
-        if i < 10:
-            index = "00" + str(i)
-        elif i < 100:
-            index = "0" + str(i)
+        index_str = str(index)
+        if index < 10:
+            index_str = "00" + str(index)
+        elif index < 100:
+            index_str = "0" + str(index)
 
-        new_filename = f"{prefix} {str(index)} {sufix}.{extension}"
+        tokens = [prefix, index_str, sufix]
+
+        new_filename = append_if_not_empty(tokens, "")
+        new_filename += f".{extension}"
 
         source = path + filename
         dest   = path + new_filename
 
         os.rename(source, dest)
+        index += 1
 
-        i += 1
+def append_if_not_empty(tokens: list, text: str) -> str:
+    new_text = text
+    for token in tokens:
+        if token != "":
+            if new_text == "":
+                new_text += token
+            else:
+                new_text += f" {token}"
+    return new_text
 
 if __name__ == '__main__':
     main()
